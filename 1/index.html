@@ -1,0 +1,156 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+  <title>Infinity - Codevember</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      font-size: 16px;
+      font-weight: 300;
+    }
+
+    header {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 20px 16px 5px;
+    }
+
+    section.content {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    h1 {
+      font-weight: 400;
+      margin: 0;
+      letter-spacing: 0.1em;
+      font-family: monospace;
+    }
+
+    a,
+    a:visited {
+      color: cadetblue;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+    }
+
+    a:hover {
+      box-shadow: 0 1px;
+    }
+
+    #panel {
+      display: block;
+      position: relative;
+      overflow-y: hidden;
+      overflow-x: auto;
+      box-sizing: border-box;
+      width: 100%;
+      height: 330px;
+      margin: 60px 0 20px 0;
+    }
+
+    #container {
+      position: relative;
+      height: 100%;
+    }
+
+    canvas {
+      display: block;
+      width: 310px;
+      height: 310px;
+      margin: 0 5px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px -3px rgba(0, 0, 0, 0.6);
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+
+<body>
+  <article>
+    <header>
+      <h1>Infinity</h1>
+    </header>
+    <main>
+      <section class="content">
+        <p>A seemingly infinite list of estimated polygons. Each one is unique. No two shapes are exactly the same. </p>
+        <p>This was created using <a href="https://roughjs.com/" target="_blank" rel="noopener">rough.js</a> as part of
+          <a href="http://codevember.xyz/" target="_blank" rel="noopener">#codevemeber</a>
+          for November 1, 2018 by <a href="https://twitter.com/preetster" target="_blank" rel="noopener">Preet</a>.</p>
+      </section>
+      <section>
+        <div id="panel">
+          <div id="container"></div>
+        </div>
+      </section>
+    </main>
+  </article>
+
+
+  <script>
+    function ready() {
+      const container = document.getElementById('container');
+      const panel = document.getElementById('panel');
+      const shapes = {};
+
+      const generator = rough.generator({
+        options: {
+          stroke: 'white',
+          fill: 'white',
+          fillWeight: 3
+        }
+      }, { width: 310, height: 310 });
+      const vl = new VirtualList(container, panel);
+      vl.itemwidth = 320;
+      vl.delegate = {
+        length: 286789,
+
+        createElement() {
+          const c = document.createElement('canvas');
+          c.width = 310;
+          c.height = 310;
+          return c;
+        },
+
+        updateElement(canvas, index) {
+          const ctx = canvas.getContext('2d');
+          let color, shape;
+          if (shapes[index]) {
+            color = shapes[index].color;
+            shape = shapes[index].shape;
+          } else {
+            color = `hsl(${Math.round(Math.random() * 360)}, 50%, 50%)`;
+            const r = (150 + Math.round(Math.random() * 150)) / 2;
+            const sides = 3 + Math.round(Math.random() * 9);
+            const points = [];
+            const startAngle = Math.random() * Math.PI * 2;
+            const angleDIff = (Math.PI * 2) / sides;
+            for (let i = 0; i < sides; i++) {
+              const angle = startAngle + (i === 0 ? 0 : ((i * angleDIff) + (0.5 + Math.random() * 0.5) * angleDIff));
+              points.push([155 + r * Math.cos(angle), 155 + r * Math.sin(angle)]);
+            }
+            shape = generator.polygon(points, {
+              hachureAngle: -180 + Math.round(Math.random() * 360)
+            });
+            shapes[index] = { color, shape };
+          }
+          const rc = rough.canvas(canvas);
+          ctx.save();
+          ctx.fillStyle = color;
+          ctx.fillRect(0, 0, 310, 310);
+          ctx.restore();
+          rc.draw(shape);
+        }
+      };
+    }
+  </script>
+  <script defer src="https://unpkg.com/roughjs@latest/dist/rough.min.js"></script>
+  <script defer src="./vlist.js" onload="ready()"></script>
+</body>
+
+</html>
