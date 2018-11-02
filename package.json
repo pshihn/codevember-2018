@@ -1,0 +1,22 @@
+{
+  "name": "codevember-2018",
+  "version": "1.0.0",
+  "description": "Host project for Codevember experiments",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pshihn/codevember-2018.git"
+  },
+  "author": "Preet Shihn",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pshihn/codevember-2018/issues"
+  },
+  "homepage": "https://github.com/pshihn/codevember-2018#readme",
+  "dependencies": {
+    "@polymer/lit-element": "^0.6.2"
+  }
+}
