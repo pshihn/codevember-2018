@@ -2,6 +2,7 @@ let myFont, size;
 let prevTime, tx, ty;
 let fontSize = 90;
 const data = {};
+const ballCount = 1500;
 
 function preload() {
   myFont = loadFont('./RobotoMonoBold.ttf');
@@ -13,7 +14,7 @@ function setup() {
     fontSize = 60;
   }
   createCanvas(size, size);
-  data.nodes = d3.range(2000).map((d, i) => {
+  data.nodes = d3.range(ballCount).map((d, i) => {
     return { r: (Math.random() * 15 + 2), color: `rgba(255,0,0,0.4)` };
   });
   data.simulation = d3.forceSimulation()
@@ -27,7 +28,7 @@ function draw() {
   clear();
   const time = timeString();
   if (time != prevTime) {
-    data.nodes = data.nodes.slice(0, 1500);
+    data.nodes = data.nodes.slice(0, ballCount);
     const { points, posx, posy } = drawTime(time);
     tx = posx;
     ty = posy;
