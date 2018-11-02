@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
   <meta property="og:title" content="Sky - Codevember">
-  <meta property="og:description" content="Sky an image. Yep, an image made of carrots.">
+  <meta property="og:description" content="I wish there were some clouds in the sky. So I drew them.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://pshihn.github.io/codevember-2018/3/">
   <meta property="og:image" content="https://pshihn.github.io/codevember-2018/3/thumbnail.png">
@@ -15,7 +15,7 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:site" content="@preetster">
   <meta name="twitter:title" content="Sky - Codevember">
-  <meta name="twitter:description" content="Sky an image. Yep, an image made of carrots.">
+  <meta name="twitter:description" content="I wish there were some clouds in the sky. So I drew them.">
   <meta name="twitter:image" content="https://pshihn.github.io/codevember-2018/3/thumbnail.png">
   <meta name="twitter:image:width" content="300">
   <meta name="twitter:image:height" content="301">
@@ -97,9 +97,9 @@
     </header>
     <main>
       <section>
-        <p>Sky an image. Yep, an image made of carrots.</p>
+        <p>I wish there were some clouds in the sky. So I drew them.</p>
         <p>This was created as part of
-          <a href="https://pshihn.github.io/codevember-2018/">#codevemeber</a>
+          <a href="../">#codevemeber</a>
           for November 3, 2018 by <a href="https://twitter.com/preetster" target="_blank" rel="noopener">Preet</a>.</p>
       </section>
       <section style="margin: 40px 0; position: relative;">
@@ -132,7 +132,7 @@
           x: Math.random() * (width - cloudWidth),
           y: Math.random() * (height - cloudHeight),
           v: 1 + Math.random() * 5,
-          roughness: 0.7 + (Math.random() * 0.4)
+          roughness: 0.7 + (Math.random() * 0.3)
         });
       }
       animating = true;
@@ -160,7 +160,7 @@
           c.x = -Math.random() * (width - cloudWidth);
           c.y = Math.random() * (height - cloudHeight);
           c.v = 1 + Math.random() * 5;
-          c.roughness = 0.7 * (Math.random() * 0.4);
+          c.roughness = 0.7 + (Math.random() * 0.3);
         }
       }
       requestAnimationFrame(tick);
@@ -171,7 +171,13 @@
       redraw();
       let pendingResize = false;
       window.addEventListener('resize', () => {
-        pendingResize = true;
+        if (!pendingResize) {
+          pendingResize = true;
+          setTimeout(() => {
+            pendingResize = false;
+            redraw();
+          }, 1500);
+        }
         animating = false;
       });
     }
