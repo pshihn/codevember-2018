@@ -1,0 +1,188 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <meta property="og:title" content="Sky - Codevember">
+  <meta property="og:description" content="I wish there were some clouds in the sky. So I drew them.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pshihn.github.io/codevember-2018/4/">
+  <meta property="og:image" content="https://pshihn.github.io/codevember-2018/4/thumbnail.png">
+  <meta property="og:image:width" content="330">
+  <meta property="og:image:height" content="330">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@preetster">
+  <meta name="twitter:title" content="Sky - Codevember">
+  <meta name="twitter:description" content="I wish there were some clouds in the sky. So I drew them.">
+  <meta name="twitter:image" content="https://pshihn.github.io/codevember-2018/4/thumbnail.png">
+  <meta name="twitter:image:width" content="330">
+  <meta name="twitter:image:height" content="330">
+
+  <title>Sky - Codevember</title>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-86217723-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'UA-86217723-3');
+  </script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.5;
+    }
+
+    article {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 16px;
+      text-align: center;
+    }
+
+    header {
+      padding: 20px 0 5px;
+    }
+
+    h1 {
+      font-weight: 400;
+      margin: 0;
+      letter-spacing: 0.1em;
+      font-family: monospace;
+    }
+
+    a,
+    a:visited {
+      color: cadetblue;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+    }
+
+    a:hover {
+      box-shadow: 0 1px;
+    }
+
+    video {
+      display: block;
+      box-sizing: border-box;
+      width: 100%;
+    }
+
+    #canvasPanel {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 40%;
+      overflow: hidden;
+    }
+
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <article>
+    <header>
+      <h1>Sky</h1>
+    </header>
+    <main>
+      <section>
+        <p>I wish there were some clouds in the sky. So I drew them.</p>
+        <p>This was created as part of
+          <a href="../">#codevemeber</a>
+          for November 3, 2018 by <a href="https://twitter.com/preetster" target="_blank" rel="noopener">Preet</a>.</p>
+      </section>
+      <section style="margin: 40px 0; position: relative;">
+        <video muted autoplay loop src="./beach.mp4"></video>
+        <div id="canvasPanel">
+          <canvas></canvas>
+        </div>
+      </section>
+    </main>
+  </article>
+  <script>
+    const canvas = document.querySelector('canvas');
+    const ctx = canvas.getContext('2d');
+    let animating = false;
+    let clouds = [];
+    let rc;
+    const cloudWidth = 100;
+    const cloudHeight = 40;
+    let width = 0, height = 0;
+
+    function redraw() {
+      width = Math.min(window.innerWidth - 32, 600);
+      height = width / 4.4;
+      canvas.width = width;
+      canvas.height = height;
+      ctx.clearRect(0, 0, width, height);
+      clouds = [];
+      for (let i = 0; i < 3; i++) {
+        clouds.push({
+          x: Math.random() * (width - cloudWidth),
+          y: Math.random() * (height - cloudHeight),
+          v: 1 + Math.random() * 5,
+          roughness: 0.7 + (Math.random() * 0.3)
+        });
+      }
+      animating = true;
+      requestAnimationFrame(tick);
+    }
+
+    function tick() {
+      if (!animating) {
+        return;
+      }
+      ctx.clearRect(0, 0, width, height);
+      for (let i = 0; i < 3; i++) {
+        const c = clouds[i];
+        ctx.translate(c.x, c.y);
+        rc.path('M10,40 a 10 10, 1, 1, 1, 20 -20 a 10 10, 1, 1, 1, 30 0 a 10 10, 1, 1, 1, 20 20 z', {
+          roughness: c.roughness,
+          fill: 'white',
+          stroke: 'white',
+          fillStyle: 'zigzag',
+          strokeWidth: 2
+        });
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        c.x += c.v;
+        if (c.x > width) {
+          c.x = -Math.random() * (width - cloudWidth);
+          c.y = Math.random() * (height - cloudHeight);
+          c.v = 1 + Math.random() * 5;
+          c.roughness = 0.7 + (Math.random() * 0.3);
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+
+    function ready() {
+      rc = rough.canvas(canvas);
+      redraw();
+      let pendingResize = false;
+      window.addEventListener('resize', () => {
+        if (!pendingResize) {
+          pendingResize = true;
+          setTimeout(() => {
+            pendingResize = false;
+            redraw();
+          }, 1500);
+        }
+        animating = false;
+      });
+    }
+  </script>
+  <script async src="https://unpkg.com/roughjs@latest/dist/rough.min.js" onload="ready()"></script>
+</body>
+
+</html>
